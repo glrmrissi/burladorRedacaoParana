@@ -15,7 +15,11 @@ python --version
 
 ## Passo 4 instale o pip 
 
-python get-pip.py
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+### Caso ja tenha instalado e só queira atualizar 
+
+python -m pip install --upgrade pip
 
 ## Passo 5 instale o pyautogui
 
