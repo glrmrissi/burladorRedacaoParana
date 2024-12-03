@@ -1,56 +1,88 @@
-
 import pyautogui
 import time
+import threading
+import tkinter as tk
 
-# Aguarda para você posicionar o cursor no local desejado
-print("Posicione o cursor no local desejado. Você tem 5 segundos...")
-time.sleep(5)
-
-# Texto que precisa ser digitado
-texto = "Seu texto vai aqui"
+# Flag para controlar se o programa está executando
+executando = False
 
 # Função para digitar o texto com acentos
 def digitar_com_acento(texto):
+    global executando
     for caractere in texto:
+        if not executando:
+            break  # Se a execução for interrompida, sair da função
+
         if caractere == 'á':
-            pyautogui.press('´')  # Pressiona o acento agudo
-            pyautogui.press('a')   # Pressiona a letra 'a'
+            pyautogui.press('´')
+            pyautogui.press('a')
+        elif caractere == 'à':
+            pyautogui.press('`')
+            pyautogui.press('a')
         elif caractere == 'é':
-            pyautogui.press('´')  # Pressiona o acento agudo
-            pyautogui.press('e')   # Pressiona a letra 'e'
+            pyautogui.press('´')
+            pyautogui.press('e')
         elif caractere == 'í':
-            pyautogui.press('´')  # Pressiona o acento agudo
-            pyautogui.press('i')   # Pressiona a letra 'i'
+            pyautogui.press('´')
+            pyautogui.press('i')
         elif caractere == 'ó':
-            pyautogui.press('´')  # Pressiona o acento agudo
-            pyautogui.press('o')   # Pressiona a letra 'o'
+            pyautogui.press('´')
+            pyautogui.press('o')
         elif caractere == 'ú':
-            pyautogui.press('´')  # Pressiona o acento agudo
-            pyautogui.press('u')   # Pressiona a letra 'u'
+            pyautogui.press('´')
+            pyautogui.press('u')
         elif caractere == 'ã':
-            pyautogui.press('~')  # Pressiona o til
-            pyautogui.press('a')   # Pressiona a letra 'a'
+            pyautogui.press('~')
+            pyautogui.press('a')
         elif caractere == 'õ':
-            pyautogui.press('~')  # Pressiona o til
-            pyautogui.press('o')   # Pressiona a letra 'o'
+            pyautogui.press('~')
+            pyautogui.press('o')
         elif caractere == 'â':
-            pyautogui.press('^')  # Pressiona o acento circunflexo
-            pyautogui.press('a')   # Pressiona a letra 'a'
+            pyautogui.press('^')
+            pyautogui.press('a')
         elif caractere == 'ê':
-            pyautogui.press('^')  # Pressiona o acento circunflexo
-            pyautogui.press('e')   # Pressiona a letra 'e'
+            pyautogui.press('^')
+            pyautogui.press('e')
         elif caractere == 'ô':
-            pyautogui.press('^')  # Pressiona o acento circunflexo
-            pyautogui.press('o')   # Pressiona a letra 'o'
+            pyautogui.press('^')
+            pyautogui.press('o')
         elif caractere == 'ç':
-            pyautogui.keyDown('´') # Era pra funcionar no teclado americano, porém não está funciando | Ver depois | 
-            pyautogui.press('c')   # Pressiona diretamente o 'c'
+            pyautogui.keyDown('´')
+            pyautogui.press('c')
             time.sleep(0.1)
             pyautogui.keyUp('´')
         else:
             pyautogui.write(caractere, interval=0.1)  # Digita os outros caracteres normalmente
 
-# Chama a função para digitar o texto com acentos
-digitar_com_acento(texto)
+    print("Texto digitado com sucesso!")
 
-print("Texto digitado com sucesso! Paraná é um lixo")
+# Função para iniciar a digitação
+def iniciar_digitacao():
+    global executando
+    executando = True
+    texto = campo_texto.get("1.0", tk.END)  # Obtém o texto do widget Text
+    threading.Thread(target=digitar_com_acento, args=(texto,)).start()
+
+# Função para parar a digitação
+def parar_digitacao():
+    global executando
+    executando = False
+    print("Digitação interrompida.")
+
+# Criação da interface gráfica
+janela = tk.Tk()
+janela.title("Auto-Typer Controlável")
+
+# Campo de texto para entrada do usuário
+campo_texto = tk.Text(janela, height=10, width=50)
+campo_texto.pack(pady=10)
+
+# Botões de controle
+botao_iniciar = tk.Button(janela, text="Iniciar", command=iniciar_digitacao, width=20)
+botao_iniciar.pack(pady=5)
+
+botao_parar = tk.Button(janela, text="Parar", command=parar_digitacao, width=20)
+botao_parar.pack(pady=5)
+
+# Executa a interface
+janela.mainloop()
